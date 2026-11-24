@@ -1,18 +1,28 @@
 # AGENTS.md — Directives per a OpenCode
 
 ## Entorn i Stack Tècnic
-- Llenguatge: Python 3.11+
-- Interfície: Línia de comandes (CLI) amb mòdul `argparse` o `cmd`  
-- Manteniment de Dades: Fitxer JSON local (`data/tasks.json`)
+- Llenguatge: Python 3.11+ (només biblioteca estàndard).
+- Interfície: Línia de comandes (CLI) amb el mòdul `argparse`.
+- Manteniment de Dades: Fitxer JSON local (`data/tasks.json`), relatiu al directori de treball actual.
+
+## Estructura del Repositori
+- `src/` → codi font (`tasks_app.py`, `models.py`).
+- `test/` → proves amb pytest (`test_tasks_app.py`).
+- `data/` → fitxer de persistència `tasks.json`.
 
 ## Comandes de Desenvolupament
-- Executar aplicació: `python3 src/tasks_app.py`
+- Executar aplicació: `python3 src/tasks_app.py <comandament> [opcions]`
 - Executar tots els tests: `python3 -m pytest test`
-- Executar test únic: `python3 -m pytest test/test_task.py`
+- Executar test únic: `python3 -m pytest test/test_tasks_app.py`
 
 ## Convencions de Codi
 - Estil: PEP8.
 - Idioma del codi i comentaris: Català (mantenir consistència en noms de variables).
+- Els missatges per pantalla han de coincidir literalment amb els de `SPECIFICATIONS.md`.
+
+## Convencions de Test
+- Cada escenari Gherkin (GS-xx) de `SPECIFICATIONS.md` ha de tenir com a mínim un test amb el seu identificador al nom (ex. `test_gs01_creacio_tasca`).
+- Els tests s'executen en un directori temporal (fixture `tmp_path` de pytest, amb `cwd=tmp_path`). Mai modifiquen el `data/tasks.json` del repositori.
 
 ## Regles de Gestió de Tasques (`TASKS.md`)
 1. Llegeix `TASKS.md` i identifica la següent tasca amb estat `[ ]`.
@@ -22,7 +32,10 @@
 5. Quan estigui completada i verificada, canvia l'estat a `[x]`.
 6. Atura't i demana confirmació a l'usuari abans de passar a la següent tasca.
 
-## Restriccions de Desenvolupament
-- No instal·lis llibreries externes no autoritzades.
-- No modifiquis fitxers de configuració fora de `src/` i `test/`
-
+## Restriccions de Desenvolupament (Límits)
+- No instal·lis llibreries externes no autoritzades (només `pytest`, ja instal·lat).
+- Només pots crear o modificar fitxers a `src/`, `test/` i `data/`, i l'estat de les tasques a `TASKS.md`.
+- Mai modifiquis `AGENTS.md`, `SPECIFICATIONS.md`, `.devcontainer/` ni `requirements.txt`.
+- Mai executis comandes `git` (els commits els fa el desenvolupador).
+- Mai llegeixis ni modifiquis la carpeta `_esborranys/`.
+- Si una especificació és ambigua, pregunta abans d'implementar.
