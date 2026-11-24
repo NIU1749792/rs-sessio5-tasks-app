@@ -7,7 +7,14 @@ from models import Task
 RUTA_TASQUES = Path('data') / 'tasks.json'
 
 
+def assegura_fitxer():
+    RUTA_TASQUES.parent.mkdir(parents=True, exist_ok=True)
+    if not RUTA_TASQUES.exists():
+        RUTA_TASQUES.write_text('[]', encoding='utf-8')
+
+
 def llegeix_tasques():
+    assegura_fitxer()
     with RUTA_TASQUES.open(encoding='utf-8') as fitxer:
         registres = json.load(fitxer)
     return [Task.des_de_diccionari(registre) for registre in registres]
@@ -21,7 +28,8 @@ def desa_tasques(tasques):
 
 def afegeix_tasca(titol, assignatura):
     tasques = llegeix_tasques()
-    tasca = Task(len(tasques) + 1, titol, assignatura)
+    seguent_id = max((tasca.id for tasca in tasques), default=0) + 1
+    tasca = Task(seguent_id, titol, assignatura)
     tasques.append(tasca)
     desa_tasques(tasques)
     print(f'Tasca [ID: {tasca.id}] creada amb èxit')
