@@ -349,3 +349,81 @@ def test_gs15_modificacio_estat_no_valid(directori_temporal):
         "Error: l'estat ha de ser 'pendent' o 'completada'."
     )
     assert ruta_tasques.read_text(encoding='utf-8') == contingut_inicial
+
+
+def test_gs16_marca_tasca_completada(directori_temporal):
+    tasques = [
+        {
+            'id': 1,
+            'titol': 'Pràctica 1',
+            'assignatura': 'RS',
+            'estat': 'pendent',
+            'data_limit': None,
+        }
+    ]
+    ruta_tasques = directori_temporal / 'data' / 'tasks.json'
+    ruta_tasques.write_text(
+        json.dumps(tasques, ensure_ascii=False), encoding='utf-8'
+    )
+
+    resultat = executa(directori_temporal, 'complete', '--id', '1')
+
+    assert resultat.returncode == 0
+    assert resultat.stdout.strip() == (
+        'Tasca [ID: 1] marcada com a completada'
+    )
+    assert json.loads(ruta_tasques.read_text(encoding='utf-8')) == [
+        {
+            'id': 1,
+            'titol': 'Pràctica 1',
+            'assignatura': 'RS',
+            'estat': 'completada',
+            'data_limit': None,
+        }
+    ]
+
+
+def test_gs17_tasca_ja_completada(directori_temporal):
+    tasques = [
+        {
+            'id': 1,
+            'titol': 'Pràctica 1',
+            'assignatura': 'RS',
+            'estat': 'completada',
+            'data_limit': None,
+        }
+    ]
+    ruta_tasques = directori_temporal / 'data' / 'tasks.json'
+    contingut_inicial = json.dumps(tasques, ensure_ascii=False)
+    ruta_tasques.write_text(contingut_inicial, encoding='utf-8')
+
+    resultat = executa(directori_temporal, 'complete', '--id', '1')
+
+    assert resultat.returncode == 0
+    assert resultat.stdout.strip() == (
+        'La tasca [ID: 1] ja estava completada.'
+    )
+    assert ruta_tasques.read_text(encoding='utf-8') == contingut_inicial
+
+
+def test_gs18_completar_tasca_inexistent(directori_temporal):
+    tasques = [
+        {
+            'id': 1,
+            'titol': 'Pràctica 1',
+            'assignatura': 'RS',
+            'estat': 'pendent',
+            'data_limit': None,
+        }
+    ]
+    ruta_tasques = directori_temporal / 'data' / 'tasks.json'
+    contingut_inicial = json.dumps(tasques, ensure_ascii=False)
+    ruta_tasques.write_text(contingut_inicial, encoding='utf-8')
+
+    resultat = executa(directori_temporal, 'complete', '--id', '7')
+
+    assert resultat.returncode != 0
+    assert resultat.stdout.strip() == (
+        'Error: no existeix cap tasca amb ID 7.'
+    )
+    assert ruta_tasques.read_text(encoding='utf-8') == contingut_inicial

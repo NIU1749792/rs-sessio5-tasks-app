@@ -32,7 +32,7 @@ Dependències: les tasques s'han d'executar en l'ordre indicat (2.1 → 2.13).
 
 ### 2.C Completar tasques
 - [x] Tasca 2.7: Implementar el comandament `complete --id <ID>`, incloent el cas de tasca ja completada i d'ID inexistent. (RF-16, RF-17, RF-12)
-- [ ] Tasca 2.8: Afegir els tests GS-16, GS-17 i GS-18 i verificar que passen.
+- [x] Tasca 2.8: Afegir els tests GS-16, GS-17 i GS-18 i verificar que passen.
 
 ### 2.D Avisos al llistat
 - [ ] Tasca 2.9: Implementar l'obtenció de la data actual amb suport per a la variable d'entorn `TASKS_APP_AVUI`. (RNF-05)
