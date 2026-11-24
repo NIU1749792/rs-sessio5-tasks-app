@@ -118,9 +118,9 @@ def indicador_tasca(tasca, avui):
         return ''
     dies = (date.fromisoformat(tasca.data_limit) - avui).days
     if dies < 0:
-        return ' [CADUCADA]'
+        return 'CADUCADA'
     if dies < 7:
-        return ' [URGENT]'
+        return 'URGENT'
     return ''
 
 
@@ -137,7 +137,10 @@ def mostra_tasques():
         )
         if tasca.data_limit is not None:
             linia += f' - data límit: {tasca.data_limit}'
-        print(linia + indicador_tasca(tasca, avui))
+        indicador = indicador_tasca(tasca, avui)
+        if indicador:
+            linia += f' [{indicador}]'
+        print(linia)
 
 
 def main():
