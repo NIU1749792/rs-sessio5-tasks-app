@@ -143,6 +143,31 @@ def mostra_tasques():
         print(linia)
 
 
+def mostra_resum():
+    tasques = llegeix_tasques()
+    avui = data_actual()
+    pendents = 0
+    completades = 0
+    caducades = 0
+    urgents = 0
+    for tasca in tasques:
+        if tasca.estat == 'pendent':
+            pendents += 1
+        elif tasca.estat == 'completada':
+            completades += 1
+        indicador = indicador_tasca(tasca, avui)
+        if indicador == 'CADUCADA':
+            caducades += 1
+        elif indicador == 'URGENT':
+            urgents += 1
+    print('Resum del registre de tasques:')
+    print(f'- Total: {len(tasques)}')
+    print(f'- Pendents: {pendents}')
+    print(f'- Completades: {completades}')
+    print(f'- Caducades: {caducades}')
+    print(f'- Urgents: {urgents}')
+
+
 def main():
     parser = argparse.ArgumentParser(
         description='Eina CLI per gestionar tasques acadèmiques.'
@@ -166,6 +191,9 @@ def main():
     )
 
     subcomandaments.add_parser('list', help='Mostra totes les tasques.')
+    subcomandaments.add_parser(
+        'summary', help='Mostra un resum del registre de tasques.'
+    )
 
     parser_edita = subcomandaments.add_parser(
         'edit', help='Modifica una tasca existent.'
@@ -233,6 +261,8 @@ def main():
         )
     elif arguments.comandament == 'complete':
         completa_tasca(arguments.id_tasca)
+    elif arguments.comandament == 'summary':
+        mostra_resum()
     else:
         mostra_tasques()
 

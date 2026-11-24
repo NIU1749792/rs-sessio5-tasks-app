@@ -51,7 +51,7 @@ Dependències: 3.1 és prerequisit de 3.2 i 3.5; la resta s'executen en l'ordre 
 - [x] Tasca 3.1: Extreure a una funció única el càlcul de l'indicador d'una tasca (`CADUCADA`, `URGENT` o cap) i fer que `list` la utilitzi, sense canviar el seu comportament. (RNF-06, RF-19, RF-20)
 
 ### 3.B Resum del registre
-- [ ] Tasca 3.2: Implementar el comandament `summary` amb les quantitats total, pendents, completades, caducades i urgents. (RF-21, RF-22, RF-23)
+- [x] Tasca 3.2: Implementar el comandament `summary` amb les quantitats total, pendents, completades, caducades i urgents. (RF-21, RF-22, RF-23)
 - [ ] Tasca 3.3: Afegir els tests GS-20, GS-21 i GS-22 i verificar que passen.
 
 ### 3.C Filtres de llistat
