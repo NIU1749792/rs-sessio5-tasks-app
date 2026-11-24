@@ -33,6 +33,66 @@ def executa(directori, *arguments, entorn=None):
     )
 
 
+@pytest.fixture
+def registre_gs19(directori_temporal):
+    tasques = [
+        {
+            'id': 1,
+            'titol': 'Lliurament P4',
+            'assignatura': 'RS',
+            'estat': 'pendent',
+            'data_limit': '2026-11-20',
+        },
+        {
+            'id': 2,
+            'titol': 'Examen parcial',
+            'assignatura': 'SO',
+            'estat': 'pendent',
+            'data_limit': '2026-11-24',
+        },
+        {
+            'id': 3,
+            'titol': 'Pràctica 2',
+            'assignatura': 'GABD',
+            'estat': 'pendent',
+            'data_limit': '2026-11-30',
+        },
+        {
+            'id': 4,
+            'titol': 'Pràctica 3',
+            'assignatura': 'TDIW',
+            'estat': 'pendent',
+            'data_limit': '2026-12-01',
+        },
+        {
+            'id': 5,
+            'titol': 'Informe',
+            'assignatura': 'RS',
+            'estat': 'completada',
+            'data_limit': '2026-11-20',
+        },
+        {
+            'id': 6,
+            'titol': 'Lectura',
+            'assignatura': 'IA',
+            'estat': 'pendent',
+            'data_limit': None,
+        },
+    ]
+    ruta_tasques = directori_temporal / 'data' / 'tasks.json'
+    ruta_tasques.write_text(
+        json.dumps(tasques, ensure_ascii=False), encoding='utf-8'
+    )
+    return directori_temporal
+
+
+@pytest.fixture
+def entorn_data_gs19():
+    entorn = os.environ.copy()
+    entorn['TASKS_APP_AVUI'] = '2026-11-24'
+    return entorn
+
+
 def test_gs01_creacio_tasca(directori_temporal):
     resultat = executa(
         directori_temporal,
@@ -521,3 +581,60 @@ def test_gs19_llistat_caducades_urgents_i_sense_avis(directori_temporal):
         '[6] Lectura (IA) - estat: pendent',
     ]
     assert resultat.stderr == ''
+
+
+def quantitat_resum(resultat, concepte):
+    prefix = f'- {concepte}: '
+    for linia in resultat.stdout.splitlines():
+        if linia.startswith(prefix):
+            return int(linia[len(prefix):])
+    raise AssertionError(f"No s'ha trobat {concepte} al resum")
+
+
+def test_gs20_resum_registre_amb_tasques(registre_gs19, entorn_data_gs19):
+    resultat = executa(
+        registre_gs19, 'summary', entorn=entorn_data_gs19
+    )
+
+    assert resultat.returncode == 0
+    assert resultat.stdout.strip().splitlines() == [
+        'Resum del registre de tasques:',
+        '- Total: 6',
+        '- Pendents: 5',
+        '- Completades: 1',
+        '- Caducades: 1',
+        '- Urgents: 2',
+    ]
+    assert resultat.stderr == ''
+
+
+def test_gs21_resum_registre_buit(directori_temporal):
+    resultat = executa(directori_temporal, 'summary')
+
+    assert resultat.returncode == 0
+    assert resultat.stdout.strip().splitlines() == [
+        'Resum del registre de tasques:',
+        '- Total: 0',
+        '- Pendents: 0',
+        '- Completades: 0',
+        '- Caducades: 0',
+        '- Urgents: 0',
+    ]
+    assert resultat.stderr == ''
+
+
+def test_gs22_coherencia_llistat_i_resum(
+    registre_gs19, entorn_data_gs19
+):
+    llistat = executa(registre_gs19, 'list', entorn=entorn_data_gs19)
+    resum = executa(registre_gs19, 'summary', entorn=entorn_data_gs19)
+
+    assert llistat.returncode == 0
+    assert resum.returncode == 0
+    llines = llistat.stdout.splitlines()
+    assert sum('[CADUCADA]' in linia for linia in llines) == quantitat_resum(
+        resum, 'Caducades'
+    )
+    assert sum('[URGENT]' in linia for linia in llines) == quantitat_resum(
+        resum, 'Urgents'
+    )

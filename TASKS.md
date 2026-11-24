@@ -52,7 +52,7 @@ Dependències: 3.1 és prerequisit de 3.2 i 3.5; la resta s'executen en l'ordre 
 
 ### 3.B Resum del registre
 - [x] Tasca 3.2: Implementar el comandament `summary` amb les quantitats total, pendents, completades, caducades i urgents. (RF-21, RF-22, RF-23)
-- [ ] Tasca 3.3: Afegir els tests GS-20, GS-21 i GS-22 i verificar que passen.
+- [x] Tasca 3.3: Afegir els tests GS-20, GS-21 i GS-22 i verificar que passen.
 
 ### 3.C Filtres de llistat
 - [ ] Tasca 3.4: Afegir l'opció `--subject` a `list` (coincidència exacta, sense distingir majúscules). (RF-24, RF-25)
