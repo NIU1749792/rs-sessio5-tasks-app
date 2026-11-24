@@ -13,5 +13,5 @@ Objectiu: Tenir una versió CLI funcional per afegir i consultar tasques en JSON
 ### Tasques de millora de cobertura (v1.1):
 - [x] Tasca 1.6: Garantir la creació automàtica de `data/tasks.json` i l'assignació d'ID incremental a `src/tasks_app.py`. (RF-02, RF-05)
 - [x] Tasca 1.7: Validar les opcions obligatòries de `add` (error i codi de sortida ≠ 0). (RF-06)
-- [ ] Tasca 1.8: Afegir a `test/test_tasks_app.py` els tests dels escenaris GS-04, GS-05 i GS-06.
+- [x] Tasca 1.8: Afegir a `test/test_tasks_app.py` els tests dels escenaris GS-04, GS-05 i GS-06.
 - [ ] Tasca 1.9: Executar `python3 -m pytest test` i verificar que tots els tests (GS-01..GS-06) passen.
