@@ -62,4 +62,4 @@ Dependències: 3.1 és prerequisit de 3.2 i 3.5; la resta s'executen en l'ordre 
 
 ### 3.D Validació i lliurament
 - [x] Tasca 3.8: Omplir `data/tasks.json` amb un conjunt de tasques d'exemple (com a mínim una de cada cas: caducada, urgent, sense avís, completada i sense data límit) per poder provar l'aplicació manualment.
-- [ ] Tasca 3.9: Executar `python3 -m pytest test` i verificar que passen tots els tests (GS-01..GS-28).
+- [x] Tasca 3.9: Executar `python3 -m pytest test` i verificar que passen tots els tests (GS-01..GS-28).
