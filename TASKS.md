@@ -37,7 +37,7 @@ Dependències: les tasques s'han d'executar en l'ordre indicat (2.1 → 2.13).
 ### 2.D Avisos al llistat
 - [x] Tasca 2.9: Implementar l'obtenció de la data actual amb suport per a la variable d'entorn `TASKS_APP_AVUI`. (RNF-05)
 - [x] Tasca 2.10: Ampliar `list` per mostrar la data límit i els indicadors `[CADUCADA]` i `[URGENT]`. (RF-04, RF-18, RF-19, RF-20)
-- [ ] Tasca 2.11: Afegir el test GS-19 i verificar que passa.
+- [x] Tasca 2.11: Afegir el test GS-19 i verificar que passa.
 
 ### 2.E Valors buits i validació de l'increment
 - [ ] Tasca 2.12: Rebutjar títol o assignatura buits als comandaments `add` i `edit`, i afegir el test GS-06b. (RF-06 [v2.0])

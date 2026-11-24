@@ -1,4 +1,5 @@
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -22,12 +23,13 @@ def directori_sense_fitxer(tmp_path, monkeypatch):
     return tmp_path
 
 
-def executa(directori, *arguments):
+def executa(directori, *arguments, entorn=None):
     return subprocess.run(
         [sys.executable, str(RUTA_SCRIPT), *arguments],
         cwd=directori,
         capture_output=True,
         text=True,
+        env=entorn,
     )
 
 
@@ -427,3 +429,81 @@ def test_gs18_completar_tasca_inexistent(directori_temporal):
         'Error: no existeix cap tasca amb ID 7.'
     )
     assert ruta_tasques.read_text(encoding='utf-8') == contingut_inicial
+
+
+def test_gs19_llistat_caducades_urgents_i_sense_avis(directori_temporal):
+    tasques = [
+        {
+            'id': 1,
+            'titol': 'Lliurament P4',
+            'assignatura': 'RS',
+            'estat': 'pendent',
+            'data_limit': '2026-11-20',
+        },
+        {
+            'id': 2,
+            'titol': 'Examen parcial',
+            'assignatura': 'SO',
+            'estat': 'pendent',
+            'data_limit': '2026-11-24',
+        },
+        {
+            'id': 3,
+            'titol': 'Pràctica 2',
+            'assignatura': 'GABD',
+            'estat': 'pendent',
+            'data_limit': '2026-11-30',
+        },
+        {
+            'id': 4,
+            'titol': 'Pràctica 3',
+            'assignatura': 'TDIW',
+            'estat': 'pendent',
+            'data_limit': '2026-12-01',
+        },
+        {
+            'id': 5,
+            'titol': 'Informe',
+            'assignatura': 'RS',
+            'estat': 'completada',
+            'data_limit': '2026-11-20',
+        },
+        {
+            'id': 6,
+            'titol': 'Lectura',
+            'assignatura': 'IA',
+            'estat': 'pendent',
+            'data_limit': None,
+        },
+    ]
+    ruta_tasques = directori_temporal / 'data' / 'tasks.json'
+    ruta_tasques.write_text(
+        json.dumps(tasques, ensure_ascii=False), encoding='utf-8'
+    )
+    entorn = os.environ.copy()
+    entorn['TASKS_APP_AVUI'] = '2026-11-24'
+
+    resultat = executa(directori_temporal, 'list', entorn=entorn)
+
+    assert resultat.returncode == 0
+    assert resultat.stdout.strip().splitlines() == [
+        (
+            '[1] Lliurament P4 (RS) - estat: pendent'
+            ' - data límit: 2026-11-20 [CADUCADA]'
+        ),
+        (
+            '[2] Examen parcial (SO) - estat: pendent'
+            ' - data límit: 2026-11-24 [URGENT]'
+        ),
+        (
+            '[3] Pràctica 2 (GABD) - estat: pendent'
+            ' - data límit: 2026-11-30 [URGENT]'
+        ),
+        '[4] Pràctica 3 (TDIW) - estat: pendent - data límit: 2026-12-01',
+        (
+            '[5] Informe (RS) - estat: completada'
+            ' - data límit: 2026-11-20'
+        ),
+        '[6] Lectura (IA) - estat: pendent',
+    ]
+    assert resultat.stderr == ''
