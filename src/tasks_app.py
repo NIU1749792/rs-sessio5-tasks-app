@@ -101,16 +101,31 @@ def completa_tasca(id_tasca):
     error_id_inexistent(id_tasca)
 
 
+def indicador_tasca(tasca, avui):
+    if tasca.estat != 'pendent' or tasca.data_limit is None:
+        return ''
+    dies = (date.fromisoformat(tasca.data_limit) - avui).days
+    if dies < 0:
+        return ' [CADUCADA]'
+    if dies < 7:
+        return ' [URGENT]'
+    return ''
+
+
 def mostra_tasques():
     tasques = llegeix_tasques()
     if not tasques:
         print('Registre de tasques buit.')
         return
+    avui = data_actual()
     for tasca in tasques:
-        print(
+        linia = (
             f'[{tasca.id}] {tasca.titol} ({tasca.assignatura})'
             f' - estat: {tasca.estat}'
         )
+        if tasca.data_limit is not None:
+            linia += f' - data límit: {tasca.data_limit}'
+        print(linia + indicador_tasca(tasca, avui))
 
 
 def main():
