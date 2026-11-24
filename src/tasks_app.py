@@ -1,5 +1,6 @@
 import argparse
 import json
+import os
 import re
 import sys
 from datetime import date
@@ -20,6 +21,13 @@ def data_limit_valida(valor):
     except ValueError:
         return False
     return True
+
+
+def data_actual():
+    valor = os.environ.get('TASKS_APP_AVUI')
+    if valor is not None and data_limit_valida(valor):
+        return date.fromisoformat(valor)
+    return date.today()
 
 
 def assegura_fitxer():
