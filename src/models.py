@@ -2,11 +2,14 @@ import json
 
 
 class Task:
-    def __init__(self, id, titol, assignatura, estat='pendent'):
+    def __init__(
+        self, id, titol, assignatura, estat='pendent', data_limit=None
+    ):
         self.id = id
         self.titol = titol
         self.assignatura = assignatura
         self.estat = estat
+        self.data_limit = data_limit
 
     def a_diccionari(self):
         return {
@@ -14,6 +17,7 @@ class Task:
             'titol': self.titol,
             'assignatura': self.assignatura,
             'estat': self.estat,
+            'data_limit': self.data_limit,
         }
 
     @classmethod
@@ -23,6 +27,7 @@ class Task:
             dades['titol'],
             dades['assignatura'],
             dades['estat'],
+            dades.get('data_limit'),
         )
 
     def a_json(self):

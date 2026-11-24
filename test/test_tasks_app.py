@@ -46,6 +46,7 @@ def test_gs01_creacio_tasca(directori_temporal):
             'titol': 'Pràctica 1',
             'assignatura': 'RS',
             'estat': 'pendent',
+            'data_limit': None,
         }
     ]
 
