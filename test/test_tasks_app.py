@@ -131,3 +131,82 @@ def test_gs06_creacio_sense_assignatura(directori_temporal):
     assert 'error:' in resultat.stderr
     assert 'creada amb èxit' not in resultat.stdout
     assert json.loads(ruta_tasques.read_text(encoding='utf-8')) == []
+
+
+def test_gs07_creacio_amb_data_limit(directori_temporal):
+    resultat = executa(
+        directori_temporal,
+        'add', '--title', 'Pràctica 2', '--subject', 'RS',
+        '--due', '2026-12-15',
+    )
+
+    ruta_tasques = directori_temporal / 'data' / 'tasks.json'
+    assert resultat.returncode == 0
+    assert resultat.stdout.strip() == 'Tasca [ID: 1] creada amb èxit'
+    assert json.loads(ruta_tasques.read_text(encoding='utf-8')) == [
+        {
+            'id': 1,
+            'titol': 'Pràctica 2',
+            'assignatura': 'RS',
+            'estat': 'pendent',
+            'data_limit': '2026-12-15',
+        }
+    ]
+
+
+def test_gs08_creacio_sense_data_limit(directori_temporal):
+    resultat = executa(
+        directori_temporal,
+        'add', '--title', 'Lectura', '--subject', 'IA',
+    )
+
+    ruta_tasques = directori_temporal / 'data' / 'tasks.json'
+    assert resultat.returncode == 0
+    assert json.loads(ruta_tasques.read_text(encoding='utf-8')) == [
+        {
+            'id': 1,
+            'titol': 'Lectura',
+            'assignatura': 'IA',
+            'estat': 'pendent',
+            'data_limit': None,
+        }
+    ]
+
+
+def test_gs09_data_limit_format_incorrecte(directori_temporal):
+    resultat = executa(
+        directori_temporal,
+        'add', '--title', 'Pràctica 2', '--subject', 'RS',
+        '--due', '15/12/2026',
+    )
+
+    ruta_tasques = directori_temporal / 'data' / 'tasks.json'
+    assert resultat.returncode != 0
+    assert resultat.stdout.strip() == (
+        'Error: la data límit ha de tenir el format YYYY-MM-DD.'
+    )
+    assert json.loads(ruta_tasques.read_text(encoding='utf-8')) == []
+
+
+def test_gs10_lectura_registre_v1x(directori_temporal):
+    ruta_tasques = directori_temporal / 'data' / 'tasks.json'
+    ruta_tasques.write_text(
+        json.dumps(
+            [
+                {
+                    'id': 1,
+                    'titol': 'Pràctica 1',
+                    'assignatura': 'RS',
+                    'estat': 'pendent',
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding='utf-8',
+    )
+
+    resultat = executa(directori_temporal, 'list')
+
+    assert resultat.returncode == 0
+    assert resultat.stdout.strip() == '[1] Pràctica 1 (RS) - estat: pendent'
+    assert resultat.stderr == ''
