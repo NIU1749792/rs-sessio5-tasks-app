@@ -23,6 +23,18 @@ def data_limit_valida(valor):
     return True
 
 
+def textos_no_buits(*valors):
+    for valor in valors:
+        if valor is not None and not valor.strip():
+            return False
+    return True
+
+
+def error_textos_buits():
+    print("Error: el títol i l'assignatura no poden ser buits.")
+    sys.exit(1)
+
+
 def data_actual():
     valor = os.environ.get('TASKS_APP_AVUI')
     if valor is not None and data_limit_valida(valor):
@@ -182,6 +194,8 @@ def main():
 
     arguments = parser.parse_args()
     if arguments.comandament == 'add':
+        if not textos_no_buits(arguments.titol, arguments.assignatura):
+            error_textos_buits()
         if not data_limit_valida(arguments.data_limit):
             print('Error: la data límit ha de tenir el format YYYY-MM-DD.')
             sys.exit(1)
@@ -189,6 +203,8 @@ def main():
             arguments.titol, arguments.assignatura, arguments.data_limit
         )
     elif arguments.comandament == 'edit':
+        if not textos_no_buits(arguments.titol, arguments.assignatura):
+            error_textos_buits()
         if not data_limit_valida(arguments.data_limit):
             print('Error: la data límit ha de tenir el format YYYY-MM-DD.')
             sys.exit(1)

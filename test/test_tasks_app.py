@@ -135,6 +135,20 @@ def test_gs06_creacio_sense_assignatura(directori_temporal):
     assert json.loads(ruta_tasques.read_text(encoding='utf-8')) == []
 
 
+def test_gs06b_creacio_titol_buit(directori_temporal):
+    resultat = executa(
+        directori_temporal,
+        'add', '--title', '', '--subject', 'RS',
+    )
+
+    ruta_tasques = directori_temporal / 'data' / 'tasks.json'
+    assert resultat.returncode != 0
+    assert resultat.stdout.strip() == (
+        "Error: el títol i l'assignatura no poden ser buits."
+    )
+    assert json.loads(ruta_tasques.read_text(encoding='utf-8')) == []
+
+
 def test_gs07_creacio_amb_data_limit(directori_temporal):
     resultat = executa(
         directori_temporal,
