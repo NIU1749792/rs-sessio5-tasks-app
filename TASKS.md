@@ -26,7 +26,7 @@ Dependències: les tasques s'han d'executar en l'ordre indicat (2.1 → 2.13).
 - [x] Tasca 2.3: Afegir els tests GS-07, GS-08, GS-09 i GS-10 a `test/test_tasks_app.py` i verificar que passen.
 
 ### 2.B Modificació de tasques
-- [ ] Tasca 2.4: Implementar el comandament `edit --id <ID>` amb les opcions `--title`, `--subject`, `--due` i `--status`, actualitzant només els atributs indicats. (RF-10, RF-11, RF-15)
+- [x] Tasca 2.4: Implementar el comandament `edit --id <ID>` amb les opcions `--title`, `--subject`, `--due` i `--status`, actualitzant només els atributs indicats. (RF-10, RF-11, RF-15)
 - [ ] Tasca 2.5: Implementar els errors d'`edit`: ID inexistent, cap atribut indicat i estat no vàlid. (RF-12, RF-13, RF-14)
 - [ ] Tasca 2.6: Afegir els tests GS-11, GS-12, GS-13, GS-14 i GS-15 i verificar que passen.
 

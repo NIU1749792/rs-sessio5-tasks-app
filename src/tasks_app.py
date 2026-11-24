@@ -50,6 +50,25 @@ def afegeix_tasca(titol, assignatura, data_limit=None):
     print(f'Tasca [ID: {tasca.id}] creada amb èxit')
 
 
+def edita_tasca(
+    id_tasca, titol=None, assignatura=None, data_limit=None, estat=None
+):
+    tasques = llegeix_tasques()
+    for tasca in tasques:
+        if tasca.id == id_tasca:
+            if titol is not None:
+                tasca.titol = titol
+            if assignatura is not None:
+                tasca.assignatura = assignatura
+            if data_limit is not None:
+                tasca.data_limit = data_limit
+            if estat is not None:
+                tasca.estat = estat
+            desa_tasques(tasques)
+            print(f'Tasca [ID: {id_tasca}] modificada amb èxit')
+            return
+
+
 def mostra_tasques():
     tasques = llegeix_tasques()
     if not tasques:
@@ -86,6 +105,26 @@ def main():
 
     subcomandaments.add_parser('list', help='Mostra totes les tasques.')
 
+    parser_edita = subcomandaments.add_parser(
+        'edit', help='Modifica una tasca existent.'
+    )
+    parser_edita.add_argument(
+        '--id', dest='id_tasca', type=int, required=True,
+        help='Identificador de la tasca.'
+    )
+    parser_edita.add_argument(
+        '--title', dest='titol', help='Nou títol de la tasca.'
+    )
+    parser_edita.add_argument(
+        '--subject', dest='assignatura', help='Nova assignatura de la tasca.'
+    )
+    parser_edita.add_argument(
+        '--due', dest='data_limit', help='Nova data límit (YYYY-MM-DD).'
+    )
+    parser_edita.add_argument(
+        '--status', dest='estat', help='Nou estat de la tasca.'
+    )
+
     arguments = parser.parse_args()
     if arguments.comandament == 'add':
         if not data_limit_valida(arguments.data_limit):
@@ -93,6 +132,17 @@ def main():
             sys.exit(1)
         afegeix_tasca(
             arguments.titol, arguments.assignatura, arguments.data_limit
+        )
+    elif arguments.comandament == 'edit':
+        if not data_limit_valida(arguments.data_limit):
+            print('Error: la data límit ha de tenir el format YYYY-MM-DD.')
+            sys.exit(1)
+        edita_tasca(
+            arguments.id_tasca,
+            arguments.titol,
+            arguments.assignatura,
+            arguments.data_limit,
+            arguments.estat,
         )
     else:
         mostra_tasques()
