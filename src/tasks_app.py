@@ -50,9 +50,16 @@ def afegeix_tasca(titol, assignatura, data_limit=None):
     print(f'Tasca [ID: {tasca.id}] creada amb èxit')
 
 
+def error_id_inexistent(id_tasca):
+    print(f'Error: no existeix cap tasca amb ID {id_tasca}.')
+    sys.exit(1)
+
+
 def edita_tasca(
     id_tasca, titol=None, assignatura=None, data_limit=None, estat=None
 ):
+    if not RUTA_TASQUES.exists():
+        error_id_inexistent(id_tasca)
     tasques = llegeix_tasques()
     for tasca in tasques:
         if tasca.id == id_tasca:
@@ -67,6 +74,7 @@ def edita_tasca(
             desa_tasques(tasques)
             print(f'Tasca [ID: {id_tasca}] modificada amb èxit')
             return
+    error_id_inexistent(id_tasca)
 
 
 def mostra_tasques():
@@ -136,6 +144,19 @@ def main():
     elif arguments.comandament == 'edit':
         if not data_limit_valida(arguments.data_limit):
             print('Error: la data límit ha de tenir el format YYYY-MM-DD.')
+            sys.exit(1)
+        if arguments.estat is not None and arguments.estat not in (
+            'pendent', 'completada'
+        ):
+            print("Error: l'estat ha de ser 'pendent' o 'completada'.")
+            sys.exit(1)
+        if (
+            arguments.titol is None
+            and arguments.assignatura is None
+            and arguments.data_limit is None
+            and arguments.estat is None
+        ):
+            print('Error: cal indicar almenys un atribut a modificar.')
             sys.exit(1)
         edita_tasca(
             arguments.id_tasca,
