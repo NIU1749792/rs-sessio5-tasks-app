@@ -41,4 +41,4 @@ Dependències: les tasques s'han d'executar en l'ordre indicat (2.1 → 2.13).
 
 ### 2.E Valors buits i validació de l'increment
 - [x] Tasca 2.12: Rebutjar títol o assignatura buits als comandaments `add` i `edit`, i afegir el test GS-06b. (RF-06 [v2.0])
-- [ ] Tasca 2.13: Executar `python3 -m pytest test` i verificar que passen tots els tests (GS-01..GS-19 i GS-06b).
+- [x] Tasca 2.13: Executar `python3 -m pytest test` i verificar que passen tots els tests (GS-01..GS-19 i GS-06b).
