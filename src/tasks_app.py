@@ -77,6 +77,22 @@ def edita_tasca(
     error_id_inexistent(id_tasca)
 
 
+def completa_tasca(id_tasca):
+    if not RUTA_TASQUES.exists():
+        error_id_inexistent(id_tasca)
+    tasques = llegeix_tasques()
+    for tasca in tasques:
+        if tasca.id == id_tasca:
+            if tasca.estat == 'completada':
+                print(f'La tasca [ID: {id_tasca}] ja estava completada.')
+                return
+            tasca.estat = 'completada'
+            desa_tasques(tasques)
+            print(f'Tasca [ID: {id_tasca}] marcada com a completada')
+            return
+    error_id_inexistent(id_tasca)
+
+
 def mostra_tasques():
     tasques = llegeix_tasques()
     if not tasques:
@@ -133,6 +149,14 @@ def main():
         '--status', dest='estat', help='Nou estat de la tasca.'
     )
 
+    parser_completa = subcomandaments.add_parser(
+        'complete', help='Marca una tasca com a completada.'
+    )
+    parser_completa.add_argument(
+        '--id', dest='id_tasca', type=int, required=True,
+        help='Identificador de la tasca.'
+    )
+
     arguments = parser.parse_args()
     if arguments.comandament == 'add':
         if not data_limit_valida(arguments.data_limit):
@@ -165,6 +189,8 @@ def main():
             arguments.data_limit,
             arguments.estat,
         )
+    elif arguments.comandament == 'complete':
+        completa_tasca(arguments.id_tasca)
     else:
         mostra_tasques()
 

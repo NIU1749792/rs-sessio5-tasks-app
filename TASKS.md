@@ -31,7 +31,7 @@ Dependències: les tasques s'han d'executar en l'ordre indicat (2.1 → 2.13).
 - [x] Tasca 2.6: Afegir els tests GS-11, GS-12, GS-13, GS-14 i GS-15 i verificar que passen.
 
 ### 2.C Completar tasques
-- [ ] Tasca 2.7: Implementar el comandament `complete --id <ID>`, incloent el cas de tasca ja completada i d'ID inexistent. (RF-16, RF-17, RF-12)
+- [x] Tasca 2.7: Implementar el comandament `complete --id <ID>`, incloent el cas de tasca ja completada i d'ID inexistent. (RF-16, RF-17, RF-12)
 - [ ] Tasca 2.8: Afegir els tests GS-16, GS-17 i GS-18 i verificar que passen.
 
 ### 2.D Avisos al llistat
