@@ -58,7 +58,7 @@ Dependències: 3.1 és prerequisit de 3.2 i 3.5; la resta s'executen en l'ordre 
 - [x] Tasca 3.4: Afegir l'opció `--subject` a `list` (coincidència exacta, sense distingir majúscules). (RF-24, RF-25)
 - [x] Tasca 3.5: Afegir l'opció `--keyword` a `list` (subcadena del títol, sense distingir majúscules). (RF-26, RF-27)
 - [x] Tasca 3.6: Implementar la combinació de filtres i el missatge sense coincidències. (RF-28)
-- [ ] Tasca 3.7: Afegir els tests GS-23..GS-28 i verificar que passen.
+- [x] Tasca 3.7: Afegir els tests GS-23..GS-28 i verificar que passen.
 
 ### 3.D Validació i lliurament
 - [ ] Tasca 3.8: Omplir `data/tasks.json` amb un conjunt de tasques d'exemple (com a mínim una de cada cas: caducada, urgent, sense avís, completada i sense data límit) per poder provar l'aplicació manualment.

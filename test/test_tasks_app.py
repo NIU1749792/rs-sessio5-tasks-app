@@ -638,3 +638,100 @@ def test_gs22_coherencia_llistat_i_resum(
     assert sum('[URGENT]' in linia for linia in llines) == quantitat_resum(
         resum, 'Urgents'
     )
+
+
+def test_gs23_llistat_filtrat_per_assignatura(
+    registre_gs19, entorn_data_gs19
+):
+    resultat = executa(
+        registre_gs19, 'list', '--subject', 'RS', entorn=entorn_data_gs19
+    )
+
+    assert resultat.returncode == 0
+    assert resultat.stdout.strip().splitlines() == [
+        (
+            '[1] Lliurament P4 (RS) - estat: pendent'
+            ' - data límit: 2026-11-20 [CADUCADA]'
+        ),
+        (
+            '[5] Informe (RS) - estat: completada'
+            ' - data límit: 2026-11-20'
+        ),
+    ]
+
+
+def test_gs24_filtre_assignatura_sense_distingir_maiuscules(
+    registre_gs19, entorn_data_gs19
+):
+    resultat = executa(
+        registre_gs19, 'list', '--subject', 'gabd', entorn=entorn_data_gs19
+    )
+
+    assert resultat.returncode == 0
+    assert resultat.stdout.strip().splitlines() == [
+        (
+            '[3] Pràctica 2 (GABD) - estat: pendent'
+            ' - data límit: 2026-11-30 [URGENT]'
+        ),
+    ]
+
+
+def test_gs25_llistat_filtrat_per_paraula_clau(
+    registre_gs19, entorn_data_gs19
+):
+    resultat = executa(
+        registre_gs19, 'list', '--keyword', 'pràctica',
+        entorn=entorn_data_gs19,
+    )
+
+    assert resultat.returncode == 0
+    assert resultat.stdout.strip().splitlines() == [
+        (
+            '[3] Pràctica 2 (GABD) - estat: pendent'
+            ' - data límit: 2026-11-30 [URGENT]'
+        ),
+        '[4] Pràctica 3 (TDIW) - estat: pendent - data límit: 2026-12-01',
+    ]
+
+
+def test_gs26_combinacio_de_filtres(registre_gs19, entorn_data_gs19):
+    resultat = executa(
+        registre_gs19, 'list', '--subject', 'RS', '--keyword', 'informe',
+        entorn=entorn_data_gs19,
+    )
+
+    assert resultat.returncode == 0
+    assert resultat.stdout.strip().splitlines() == [
+        (
+            '[5] Informe (RS) - estat: completada'
+            ' - data límit: 2026-11-20'
+        ),
+    ]
+
+
+def test_gs27_filtre_assignatura_sense_coincidencies(
+    registre_gs19, entorn_data_gs19
+):
+    resultat = executa(
+        registre_gs19, 'list', '--subject', 'XARXES',
+        entorn=entorn_data_gs19,
+    )
+
+    assert resultat.returncode == 0
+    assert resultat.stdout.strip() == (
+        'Cap tasca coincideix amb els criteris indicats.'
+    )
+
+
+def test_gs28_filtre_paraula_clau_sense_coincidencies(
+    registre_gs19, entorn_data_gs19
+):
+    resultat = executa(
+        registre_gs19, 'list', '--keyword', 'projecte',
+        entorn=entorn_data_gs19,
+    )
+
+    assert resultat.returncode == 0
+    assert resultat.stdout.strip() == (
+        'Cap tasca coincideix amb els criteris indicats.'
+    )
