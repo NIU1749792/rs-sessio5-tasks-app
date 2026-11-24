@@ -8,7 +8,7 @@ Objectiu: Tenir una versió CLI funcional per afegir i consultar tasques en JSON
 - [x] Tasca 1.2: Implementar model de dades `Task` a `src/models.py` amb mètodes de serialització JSON. (RNF-01)
 - [x] Tasca 1.3: Desenvolupar Tasks_app a `src/tasks_app.py` amb opcions `add` i `list`. (Requisits RF-03 i RF-04)
 - [x] Tasca 1.4: Crear test d'integració a `test/test_tasks_app.py` segons els escenaris GS-01, GS-02 i GS-03.
-- [ ] Tasca 1.5: Validar execució amb OpenCode i verificar que tots els tests passen (`python3 -m pytest test`).
+- [x] Tasca 1.5: Validar execució amb OpenCode i verificar que tots els tests passen (`python3 -m pytest test`).
 
 ### Tasques de millora de cobertura (v1.1):
 - [ ] Tasca 1.6: Garantir la creació automàtica de `data/tasks.json` i l'assignació d'ID incremental a `src/tasks_app.py`. (RF-02, RF-05)
