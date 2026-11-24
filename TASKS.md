@@ -55,7 +55,7 @@ Dependències: 3.1 és prerequisit de 3.2 i 3.5; la resta s'executen en l'ordre 
 - [x] Tasca 3.3: Afegir els tests GS-20, GS-21 i GS-22 i verificar que passen.
 
 ### 3.C Filtres de llistat
-- [ ] Tasca 3.4: Afegir l'opció `--subject` a `list` (coincidència exacta, sense distingir majúscules). (RF-24, RF-25)
+- [x] Tasca 3.4: Afegir l'opció `--subject` a `list` (coincidència exacta, sense distingir majúscules). (RF-24, RF-25)
 - [ ] Tasca 3.5: Afegir l'opció `--keyword` a `list` (subcadena del títol, sense distingir majúscules). (RF-26, RF-27)
 - [ ] Tasca 3.6: Implementar la combinació de filtres i el missatge sense coincidències. (RF-28)
 - [ ] Tasca 3.7: Afegir els tests GS-23..GS-28 i verificar que passen.

@@ -124,11 +124,16 @@ def indicador_tasca(tasca, avui):
     return ''
 
 
-def mostra_tasques():
+def mostra_tasques(assignatura=None):
     tasques = llegeix_tasques()
     if not tasques:
         print('Registre de tasques buit.')
         return
+    if assignatura is not None:
+        tasques = [
+            tasca for tasca in tasques
+            if tasca.assignatura.casefold() == assignatura.casefold()
+        ]
     avui = data_actual()
     for tasca in tasques:
         linia = (
@@ -190,7 +195,12 @@ def main():
         '--due', dest='data_limit', help='Data límit (YYYY-MM-DD).'
     )
 
-    subcomandaments.add_parser('list', help='Mostra totes les tasques.')
+    parser_llista = subcomandaments.add_parser(
+        'list', help='Mostra totes les tasques.'
+    )
+    parser_llista.add_argument(
+        '--subject', dest='assignatura', help='Filtra per assignatura.'
+    )
     subcomandaments.add_parser(
         'summary', help='Mostra un resum del registre de tasques.'
     )
@@ -264,7 +274,7 @@ def main():
     elif arguments.comandament == 'summary':
         mostra_resum()
     else:
-        mostra_tasques()
+        mostra_tasques(getattr(arguments, 'assignatura', None))
 
 
 if __name__ == '__main__':
