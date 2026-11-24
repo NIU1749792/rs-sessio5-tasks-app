@@ -15,3 +15,30 @@ Objectiu: Tenir una versió CLI funcional per afegir i consultar tasques en JSON
 - [x] Tasca 1.7: Validar les opcions obligatòries de `add` (error i codi de sortida ≠ 0). (RF-06)
 - [x] Tasca 1.8: Afegir a `test/test_tasks_app.py` els tests dels escenaris GS-04, GS-05 i GS-06.
 - [x] Tasca 1.9: Executar `python3 -m pytest test` i verificar que tots els tests (GS-01..GS-06) passen.
+
+## Increment 2: Data límit, modificació, completar i avisos (v2.0)
+Objectiu: Gestionar el cicle de vida complet d'una tasca i avisar de les tasques caducades o urgents.
+Dependències: les tasques s'han d'executar en l'ordre indicat (2.1 → 2.13).
+
+### 2.A Data límit
+- [ ] Tasca 2.1: Afegir l'atribut opcional `data_limit` al model `Task` de `src/models.py`, amb serialització `YYYY-MM-DD`/`null` i lectura de registres v1.x sense aquesta clau. (RNF-01, RNF-04)
+- [ ] Tasca 2.2: Afegir l'opció `--due` al comandament `add` amb validació del format de data. (RF-07, RF-08, RF-09)
+- [ ] Tasca 2.3: Afegir els tests GS-07, GS-08, GS-09 i GS-10 a `test/test_tasks_app.py` i verificar que passen.
+
+### 2.B Modificació de tasques
+- [ ] Tasca 2.4: Implementar el comandament `edit --id <ID>` amb les opcions `--title`, `--subject`, `--due` i `--status`, actualitzant només els atributs indicats. (RF-10, RF-11, RF-15)
+- [ ] Tasca 2.5: Implementar els errors d'`edit`: ID inexistent, cap atribut indicat i estat no vàlid. (RF-12, RF-13, RF-14)
+- [ ] Tasca 2.6: Afegir els tests GS-11, GS-12, GS-13, GS-14 i GS-15 i verificar que passen.
+
+### 2.C Completar tasques
+- [ ] Tasca 2.7: Implementar el comandament `complete --id <ID>`, incloent el cas de tasca ja completada i d'ID inexistent. (RF-16, RF-17, RF-12)
+- [ ] Tasca 2.8: Afegir els tests GS-16, GS-17 i GS-18 i verificar que passen.
+
+### 2.D Avisos al llistat
+- [ ] Tasca 2.9: Implementar l'obtenció de la data actual amb suport per a la variable d'entorn `TASKS_APP_AVUI`. (RNF-05)
+- [ ] Tasca 2.10: Ampliar `list` per mostrar la data límit i els indicadors `[CADUCADA]` i `[URGENT]`. (RF-04, RF-18, RF-19, RF-20)
+- [ ] Tasca 2.11: Afegir el test GS-19 i verificar que passa.
+
+### 2.E Valors buits i validació de l'increment
+- [ ] Tasca 2.12: Rebutjar títol o assignatura buits als comandaments `add` i `edit`, i afegir el test GS-06b. (RF-06 [v2.0])
+- [ ] Tasca 2.13: Executar `python3 -m pytest test` i verificar que passen tots els tests (GS-01..GS-19 i GS-06b).
