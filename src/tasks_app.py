@@ -140,6 +140,9 @@ def mostra_tasques(assignatura=None, paraula_clau=None):
             tasca for tasca in tasques
             if clau in tasca.titol.casefold()
         ]
+    if not tasques:
+        print('Cap tasca coincideix amb els criteris indicats.')
+        return
     avui = data_actual()
     for tasca in tasques:
         linia = (
