@@ -1,10 +1,25 @@
 import argparse
 import json
+import re
+import sys
+from datetime import date
 from pathlib import Path
 
 from models import Task
 
 RUTA_TASQUES = Path('data') / 'tasks.json'
+
+
+def data_limit_valida(valor):
+    if valor is None:
+        return True
+    if re.fullmatch(r'\d{4}-\d{2}-\d{2}', valor) is None:
+        return False
+    try:
+        date.fromisoformat(valor)
+    except ValueError:
+        return False
+    return True
 
 
 def assegura_fitxer():
@@ -26,10 +41,10 @@ def desa_tasques(tasques):
         json.dump(registres, fitxer, ensure_ascii=False, indent=4)
 
 
-def afegeix_tasca(titol, assignatura):
+def afegeix_tasca(titol, assignatura, data_limit=None):
     tasques = llegeix_tasques()
     seguent_id = max((tasca.id for tasca in tasques), default=0) + 1
-    tasca = Task(seguent_id, titol, assignatura)
+    tasca = Task(seguent_id, titol, assignatura, data_limit=data_limit)
     tasques.append(tasca)
     desa_tasques(tasques)
     print(f'Tasca [ID: {tasca.id}] creada amb èxit')
@@ -65,12 +80,20 @@ def main():
         '--subject', dest='assignatura', required=True,
         help='Assignatura de la tasca.'
     )
+    parser_afegeix.add_argument(
+        '--due', dest='data_limit', help='Data límit (YYYY-MM-DD).'
+    )
 
     subcomandaments.add_parser('list', help='Mostra totes les tasques.')
 
     arguments = parser.parse_args()
     if arguments.comandament == 'add':
-        afegeix_tasca(arguments.titol, arguments.assignatura)
+        if not data_limit_valida(arguments.data_limit):
+            print('Error: la data límit ha de tenir el format YYYY-MM-DD.')
+            sys.exit(1)
+        afegeix_tasca(
+            arguments.titol, arguments.assignatura, arguments.data_limit
+        )
     else:
         mostra_tasques()
 
