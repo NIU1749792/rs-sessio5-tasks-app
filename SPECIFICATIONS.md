@@ -1,4 +1,4 @@
-# SPECIFICATIONS.md — Sistema Tasks_app (v2.0)
+# SPECIFICATIONS.md — Sistema Tasks_app (v3.0)
 
 ## 0. Historial de Versions
 | Versió | Iteració | Canvis |
@@ -6,6 +6,7 @@
 | v1.0 | Sprint 1 | Especificació inicial: US-01, US-02, RF-01..RF-04, GS-01..GS-03. |
 | v1.1 | Sprint 1 | Millora de cobertura: RF-05, RF-06, RNF-01..RNF-03, GS-04..GS-06. |
 | v2.0 | Sprint 2 | Data límit, modificació, completar tasques i avisos al llistat: US-03..US-06, RF-07..RF-20, RNF-04..RNF-05, GS-07..GS-19. RNF-01, RF-04 i RF-06 ampliats (compatibles amb v1.x); GS-06b. |
+| v3.0 | Sprint 3 | Modes de llistat: resum, filtre per assignatura i filtre per paraula clau: US-07..US-09, RF-21..RF-28, RNF-06, GS-20..GS-28. |
 
 > Els elements nous o modificats a cada versió s'indiquen amb l'etiqueta `[vX.Y]`.
 
@@ -19,6 +20,9 @@ Tasks_app és una eina CLI lleugera per ajudar als estudiants a gestionar les se
 - US-04 `[v2.0]`: Com a estudiant, vull modificar qualsevol atribut d'una tasca a partir del seu ID per tal de corregir els errors comesos en registrar-la.
 - US-05 `[v2.0]`: Com a estudiant, vull marcar una tasca com a completada per tal de distingir la feina feta de la pendent.
 - US-06 `[v2.0]`: Com a estudiant, vull que el llistat m'avisi de les tasques pendents caducades o urgents per tal de prioritzar-les.
+- US-07 `[v3.0]`: Com a estudiant, vull veure un resum amb la quantitat de tasques totals, pendents, completades, caducades i urgents per tal de conèixer d'un cop d'ull el meu volum de feina.
+- US-08 `[v3.0]`: Com a estudiant, vull llistar només les tasques d'una assignatura per tal de centrar-me en una sola matèria.
+- US-09 `[v3.0]`: Com a estudiant, vull llistar les tasques que contenen una paraula clau al títol per tal de trobar ràpidament una tasca concreta.
 
 ## 3. Model de Dades (Mermaid)
 ```mermaid
@@ -74,12 +78,35 @@ classDiagram
 - RF-20: Si una tasca té estat `pendent` i la seva data límit és igual o posterior a la data actual i anterior a la data actual més 7 dies (és a dir, falten entre 0 i 6 dies), el sistema tasks_app ha d'afegir l'indicador ` [URGENT]` al final de la seva línia del llistat.
   - Les tasques `completada` i les tasques sense data límit no mostren mai cap indicador.
 
+#### Resum del registre `[v3.0]`
+- RF-21: El sistema tasks_app ha de proveir a l'estudiant la capacitat de visualitzar un resum del registre mitjançant el comandament `summary`.
+- RF-22: El resum del sistema tasks_app ha de mostrar, en aquest ordre, la quantitat total de tasques i la quantitat de tasques pendents, completades, caducades (segons RF-19) i urgents (segons RF-20), amb el format:
+  ```
+  Resum del registre de tasques:
+  - Total: <n>
+  - Pendents: <n>
+  - Completades: <n>
+  - Caducades: <n>
+  - Urgents: <n>
+  ```
+  - Les tasques caducades i urgents són un subconjunt de les pendents; per tant, Pendents + Completades = Total.
+- RF-23: Si el registre no conté cap tasca, el sistema tasks_app ha de mostrar el resum amb totes les quantitats a 0.
+
+#### Filtres de llistat `[v3.0]`
+- RF-24: El sistema tasks_app ha de proveir a l'estudiant la capacitat de llistar només les tasques d'una assignatura mitjançant l'opció `--subject <assignatura>` del comandament `list`.
+- RF-25: El filtre per assignatura del sistema tasks_app ha de seleccionar les tasques l'assignatura de les quals coincideix completament amb el valor indicat, sense distingir majúscules de minúscules.
+- RF-26: El sistema tasks_app ha de proveir a l'estudiant la capacitat de llistar només les tasques el títol de les quals conté una paraula clau mitjançant l'opció `--keyword <paraula>` del comandament `list`.
+- RF-27: El filtre per paraula clau del sistema tasks_app ha de seleccionar les tasques el títol de les quals conté el valor indicat com a subcadena, sense distingir majúscules de minúscules.
+- RF-28: Si el comandament `list` inclou alhora `--subject` i `--keyword`, el sistema tasks_app ha de mostrar només les tasques que compleixen els dos filtres. Si cap tasca compleix els filtres i el registre no és buit, el sistema tasks_app ha de mostrar `Cap tasca coincideix amb els criteris indicats.`
+  - Les línies filtrades mantenen el format i els indicadors de RF-18, RF-19 i RF-20.
+
 ### 4.2 Requisits No Funcionals
 - RNF-01 `[v2.0]`: El sistema tasks_app ha d'emmagatzemar cada tasca a `data/tasks.json` com un objecte JSON amb les claus `id`, `titol`, `assignatura`, `estat` i `data_limit` (cadena `YYYY-MM-DD` o `null`), codificat en UTF-8.
 - RNF-02: El sistema tasks_app ha de resoldre la ruta `data/tasks.json` de manera relativa al directori de treball actual.
 - RNF-03: El sistema tasks_app ha de funcionar amb Python 3.11 o superior utilitzant només la biblioteca estàndard.
 - RNF-04 `[v2.0]`: El sistema tasks_app ha de ser capaç de llegir fitxers `data/tasks.json` creats amb la v1.x (sense clau `data_limit`), tractant aquestes tasques com a tasques sense data límit.
 - RNF-05 `[v2.0]`: El sistema tasks_app ha d'obtenir la data actual del rellotge del sistema. Si la variable d'entorn `TASKS_APP_AVUI` conté una data `YYYY-MM-DD`, el sistema tasks_app ha d'utilitzar aquesta data com a data actual (per a proves deterministes).
+- RNF-06 `[v3.0]`: El sistema tasks_app ha de calcular els indicadors `[CADUCADA]`/`[URGENT]` del llistat i les quantitats del resum amb una única funció compartida, per garantir que ambdós són coherents.
 
 ## 5. Criteris d'acceptació i proves (Gherkin scenarios)
 
@@ -232,3 +259,63 @@ classDiagram
     "[4] Pràctica 3 (TDIW) - estat: pendent - data límit: 2026-12-01"
     "[5] Informe (RS) - estat: completada - data límit: 2026-11-20"
     "[6] Lectura (IA) - estat: pendent"
+
+### 5.6 Resum del registre `[v3.0]`
+- GS-20: Resum d'un registre amb tasques (RF-21, RF-22)
+  Atès que la data actual és `2026-11-24` (variable `TASKS_APP_AVUI=2026-11-24`)
+  i el fitxer `data/tasks.json` conté les 6 tasques de l'escenari GS-19
+  quan l'estudiant executa `python src/tasks_app.py summary`
+  aleshores el sistema mostra per pantalla:
+    "Resum del registre de tasques:"
+    "- Total: 6"
+    "- Pendents: 5"
+    "- Completades: 1"
+    "- Caducades: 1"
+    "- Urgents: 2"
+
+- GS-21: Resum d'un registre buit (RF-23)
+  Atès que la base de dades JSON no conté encara tasques
+  quan l'estudiant executa `python src/tasks_app.py summary`
+  aleshores el sistema mostra `- Total: 0`
+  i mostra `- Pendents: 0`, `- Completades: 0`, `- Caducades: 0` i `- Urgents: 0`.
+
+- GS-22: Coherència entre llistat i resum (RNF-06)
+  Atès que la data actual és `2026-11-24`
+  i el fitxer `data/tasks.json` conté les 6 tasques de l'escenari GS-19
+  quan l'estudiant executa `python src/tasks_app.py list` i `python src/tasks_app.py summary`
+  aleshores la quantitat de línies amb `[CADUCADA]` del llistat és igual al valor `Caducades` del resum
+  i la quantitat de línies amb `[URGENT]` del llistat és igual al valor `Urgents` del resum.
+
+### 5.7 Filtres de llistat `[v3.0]`
+> Els escenaris GS-23..GS-28 parteixen de la data actual `2026-11-24` i del fitxer `data/tasks.json` amb les 6 tasques de l'escenari GS-19.
+
+- GS-23: Llistat filtrat per assignatura (RF-24, RF-25)
+  quan l'estudiant executa `python src/tasks_app.py list --subject RS`
+  aleshores el sistema mostra per pantalla:
+    "[1] Lliurament P4 (RS) - estat: pendent - data límit: 2026-11-20 [CADUCADA]"
+    "[5] Informe (RS) - estat: completada - data límit: 2026-11-20"
+  i no mostra cap tasca d'altres assignatures.
+
+- GS-24: Filtre per assignatura sense distingir majúscules (RF-25)
+  quan l'estudiant executa `python src/tasks_app.py list --subject gabd`
+  aleshores el sistema mostra només:
+    "[3] Pràctica 2 (GABD) - estat: pendent - data límit: 2026-11-30 [URGENT]"
+
+- GS-25: Llistat filtrat per paraula clau al títol (RF-26, RF-27)
+  quan l'estudiant executa `python src/tasks_app.py list --keyword pràctica`
+  aleshores el sistema mostra per pantalla:
+    "[3] Pràctica 2 (GABD) - estat: pendent - data límit: 2026-11-30 [URGENT]"
+    "[4] Pràctica 3 (TDIW) - estat: pendent - data límit: 2026-12-01"
+
+- GS-26: Combinació de filtres (RF-28)
+  quan l'estudiant executa `python src/tasks_app.py list --subject RS --keyword informe`
+  aleshores el sistema mostra només:
+    "[5] Informe (RS) - estat: completada - data límit: 2026-11-20"
+
+- GS-27: Filtre per assignatura sense coincidències (RF-28)
+  quan l'estudiant executa `python src/tasks_app.py list --subject XARXES`
+  aleshores el sistema mostra `Cap tasca coincideix amb els criteris indicats.`
+
+- GS-28: Filtre per paraula clau sense coincidències (RF-28)
+  quan l'estudiant executa `python src/tasks_app.py list --keyword projecte`
+  aleshores el sistema mostra `Cap tasca coincideix amb els criteris indicats.`

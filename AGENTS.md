@@ -12,7 +12,7 @@
 
 ## Comandes de Desenvolupament
 - Executar aplicació: `python3 src/tasks_app.py <comandament> [opcions]`
-  - Comandaments disponibles: `add`, `list`, `edit`, `complete`.
+  - Comandaments disponibles: `add`, `list` (amb filtres `--subject`, `--keyword`), `edit`, `complete`, `summary`.
 - Executar amb una data fixada: `TASKS_APP_AVUI=2026-11-24 python3 src/tasks_app.py list`
 - Executar tots els tests: `python3 -m pytest test`
 - Executar test únic: `python3 -m pytest test/test_tasks_app.py`

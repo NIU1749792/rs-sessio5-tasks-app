@@ -42,3 +42,24 @@ Dependències: les tasques s'han d'executar en l'ordre indicat (2.1 → 2.13).
 ### 2.E Valors buits i validació de l'increment
 - [x] Tasca 2.12: Rebutjar títol o assignatura buits als comandaments `add` i `edit`, i afegir el test GS-06b. (RF-06 [v2.0])
 - [x] Tasca 2.13: Executar `python3 -m pytest test` i verificar que passen tots els tests (GS-01..GS-19 i GS-06b).
+
+## Increment 3: Modes de llistat (v3.0)
+Objectiu: Facilitar la consulta d'un registre de tasques gran amb un resum i filtres.
+Dependències: 3.1 és prerequisit de 3.2 i 3.5; la resta s'executen en l'ordre indicat (3.1 → 3.9).
+
+### 3.A Lògica compartida
+- [ ] Tasca 3.1: Extreure a una funció única el càlcul de l'indicador d'una tasca (`CADUCADA`, `URGENT` o cap) i fer que `list` la utilitzi, sense canviar el seu comportament. (RNF-06, RF-19, RF-20)
+
+### 3.B Resum del registre
+- [ ] Tasca 3.2: Implementar el comandament `summary` amb les quantitats total, pendents, completades, caducades i urgents. (RF-21, RF-22, RF-23)
+- [ ] Tasca 3.3: Afegir els tests GS-20, GS-21 i GS-22 i verificar que passen.
+
+### 3.C Filtres de llistat
+- [ ] Tasca 3.4: Afegir l'opció `--subject` a `list` (coincidència exacta, sense distingir majúscules). (RF-24, RF-25)
+- [ ] Tasca 3.5: Afegir l'opció `--keyword` a `list` (subcadena del títol, sense distingir majúscules). (RF-26, RF-27)
+- [ ] Tasca 3.6: Implementar la combinació de filtres i el missatge sense coincidències. (RF-28)
+- [ ] Tasca 3.7: Afegir els tests GS-23..GS-28 i verificar que passen.
+
+### 3.D Validació i lliurament
+- [ ] Tasca 3.8: Omplir `data/tasks.json` amb un conjunt de tasques d'exemple (com a mínim una de cada cas: caducada, urgent, sense avís, completada i sense data límit) per poder provar l'aplicació manualment.
+- [ ] Tasca 3.9: Executar `python3 -m pytest test` i verificar que passen tots els tests (GS-01..GS-28).
